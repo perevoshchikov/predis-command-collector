@@ -48,8 +48,37 @@ class Profile
      */
     protected function formatArguments(array $args): string
     {
-        return \implode(' ', \array_map(function (string $arg) {
-            return \trim($arg) ? $arg : '""';
+        return \implode(' ', \array_map(function ($arg) {
+            return $this->formatArg($arg);
         }, $args));
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return string
+     */
+    protected function formatArg($value): string
+    {
+        switch (\gettype($value)) {
+            case 'integer':
+            case 'double':
+                return (string) $value;
+            case 'boolean':
+                return $value ? 'true' : 'false';
+            case 'null':
+                return 'null';
+            case 'string':
+                if (\preg_match('/["\'\s\\\\]/', $value)) {
+                    return \sprintf('"%s"', \addslashes($value));
+                }
+
+                return $value;
+            case 'object':
+            case 'array':
+            case 'resource':
+            default:
+                return '';
+        }
     }
 }
