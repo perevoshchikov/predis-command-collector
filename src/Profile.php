@@ -60,7 +60,9 @@ class Profile
      */
     protected function formatArg($value): string
     {
-        switch (\gettype($value)) {
+        $type = \mb_strtolower(\gettype($value));
+
+        switch ($type) {
             case 'integer':
             case 'double':
                 return (string) $value;
@@ -69,14 +71,17 @@ class Profile
             case 'null':
                 return 'null';
             case 'string':
-                if (\preg_match('/["\'\s\\\\]/', $value)) {
+                if (empty($value) || \preg_match('/["\'\s\\\\]/', $value)) {
                     return \sprintf('"%s"', \addslashes($value));
                 }
 
                 return $value;
             case 'object':
+                return \sprintf('object (%s)', \get_class($value));
             case 'array':
+                return \sprintf('array (%d)', \count($value));
             case 'resource':
+                return \sprintf('resource (%s)', \get_resource_type($value));
             default:
                 return '';
         }
