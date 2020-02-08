@@ -25,6 +25,14 @@ class TraceableProcessor implements ProcessorInterface
     }
 
     /**
+     * @return callable
+     */
+    public function getCollector(): callable
+    {
+        return $this->collector;
+    }
+
+    /**
      * @inheritDoc
      */
     public function process(CommandInterface $command)
