@@ -71,7 +71,11 @@ class Profile
             case 'null':
                 return 'null';
             case 'string':
-                return \sprintf('"%s"', \addslashes($value));
+                if (empty($value) || \preg_match('/["\'\s\\\\]/', $value)) {
+                    return \sprintf('"%s"', \addslashes($value));
+                }
+
+                return $value;
             case 'object':
                 return \sprintf('object (%s)', \get_class($value));
             case 'array':
