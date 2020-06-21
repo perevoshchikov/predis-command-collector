@@ -1,13 +1,14 @@
 <?php
 
-namespace Anper\Predis\CommandCollector;
+namespace Anper\Predis\CommandCollector\Tests;
 
+use Anper\Predis\CommandCollector\Profile;
 use PHPUnit\Framework\TestCase;
 use Predis\Command\StringSet;
 
 /**
  * Class ProfileTest
- * @package Anper\Predis\CommandCollector
+ * @package Anper\Predis\CommandCollector\Tests
  */
 class ProfileTest extends TestCase
 {
