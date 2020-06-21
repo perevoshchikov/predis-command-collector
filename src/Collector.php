@@ -27,11 +27,7 @@ class Collector
      */
     public function __construct(ClientInterface $client)
     {
-        $registered = register_collector($client, $this);
-
-        if ($registered === false) {
-            throw new Exception('Fail register collector');
-        }
+        register_collector($client, $this, true);
 
         $this->client = $client;
     }
@@ -55,7 +51,7 @@ class Collector
     /**
      * @param Profile $profile
      */
-    public function __invoke(Profile $profile)
+    public function __invoke(Profile $profile): void
     {
         $this->profiles[] = $profile;
     }
