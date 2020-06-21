@@ -23,14 +23,14 @@ class Collector
     /**
      * @param ClientInterface $client
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(ClientInterface $client)
     {
         $registered = register_collector($client, $this);
 
         if ($registered === false) {
-            throw new \Exception('Fail register collector');
+            throw new Exception('Fail register collector');
         }
 
         $this->client = $client;
