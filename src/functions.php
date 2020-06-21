@@ -4,32 +4,48 @@ namespace Anper\Predis\CommandCollector;
 
 use Predis\ClientInterface;
 use Predis\Command\Processor\ProcessorChain;
+use Predis\Command\Processor\ProcessorInterface;
 use Predis\Profile\RedisProfile;
+
+use function Anper\CallableAggregate\aggregator;
+use function Anper\CallableAggregate\clear_callbacks;
+use function Anper\CallableAggregate\get_callbacks;
+use function Anper\CallableAggregate\unregister_callback;
 
 /**
  * @param ClientInterface $client
+ * @param callable $collector
+ * @param bool $throw
+ * @param bool $prepend
  *
- * @return ProcessorChain|null
+ * @return bool
+ * @throws \Exception
  */
-function get_predis_chain_processor(ClientInterface $client): ?ProcessorChain
-{
-    $profile = $client->getProfile();
+function register_collector(
+    ClientInterface $client,
+    callable $collector,
+    bool $throw = true,
+    bool $prepend = false
+): bool {
+    $collection = aggregator($client, $created);
 
-    if (($profile instanceof RedisProfile) === false) {
-        return null;
+    if ($created) {
+        try {
+            register_processor($client, new Processor($collection));
+        } catch (\Exception $exception) {
+            if ($throw) {
+                throw $exception;
+            }
+
+            return false;
+        }
     }
 
-    $processor = $profile->getProcessor();
+    $prepend
+        ? $collection->prepend($collector)
+        : $collection->append($collector);
 
-    if (($processor instanceof ProcessorChain) === false) {
-        $processor = $processor
-            ? new ProcessorChain([$processor])
-            : new ProcessorChain();
-
-        $profile->setProcessor($processor);
-    }
-
-    return $processor;
+    return true;
 }
 
 /**
@@ -38,17 +54,9 @@ function get_predis_chain_processor(ClientInterface $client): ?ProcessorChain
  *
  * @return bool
  */
-function register_predis_collector(ClientInterface $client, callable $collector): bool
+function unregister_collector(ClientInterface $client, callable $collector): bool
 {
-    $processor = get_predis_chain_processor($client);
-
-    if ($processor === null) {
-        return false;
-    }
-
-    $processor->add(new TraceableProcessor($collector));
-
-    return true;
+    return unregister_callback($client, $collector);
 }
 
 /**
@@ -56,21 +64,52 @@ function register_predis_collector(ClientInterface $client, callable $collector)
  *
  * @return array
  */
-function get_predis_collectors(ClientInterface $client): array
+function get_collectors(ClientInterface $client): array
 {
-    $processor = get_predis_chain_processor($client);
+    return get_callbacks($client);
+}
 
-    if ($processor === null) {
-        return [];
+/**
+ * @param ClientInterface $client
+ *
+ * @return int
+ */
+function clear_collectors(ClientInterface $client): int
+{
+    return clear_callbacks($client);
+}
+
+/**
+ * @param ClientInterface $client
+ * @param ProcessorInterface $processor
+ *
+ * @return bool
+ * @throws Exception
+ * @internal
+ */
+function register_processor(ClientInterface $client, ProcessorInterface $processor): bool
+{
+    $profile = $client->getProfile();
+
+    if (!($profile instanceof RedisProfile)) {
+        throw new Exception(\sprintf(
+            'Client profile must be instance of %s, given %s',
+            RedisProfile::class,
+            \get_class($profile)
+        ));
     }
 
-    $result = [];
+    $chainProcessor = $profile->getProcessor();
 
-    foreach ($processor->getProcessors() as $p) {
-        if ($p instanceof TraceableProcessor) {
-            $result[] = $p->getCollector();
-        }
+    if (!($chainProcessor instanceof ProcessorChain)) {
+        $chainProcessor = $chainProcessor
+            ? new ProcessorChain([$chainProcessor])
+            : new ProcessorChain();
+
+        $profile->setProcessor($chainProcessor);
     }
 
-    return $result;
+    $chainProcessor->add($processor);
+
+    return true;
 }
