@@ -27,7 +27,7 @@ class Collector
      */
     public function __construct(ClientInterface $client)
     {
-        $registered = register_predis_collector($client, $this);
+        $registered = register_collector($client, $this);
 
         if ($registered === false) {
             throw new \Exception('Fail register collector');
