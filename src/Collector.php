@@ -3,7 +3,6 @@
 namespace Anper\Predis\CommandCollector;
 
 use Predis\ClientInterface;
-use Predis\Command\CommandInterface;
 
 /**
  * Class Collector
@@ -54,10 +53,10 @@ class Collector
     }
 
     /**
-     * @param CommandInterface $command
+     * @param Profile $profile
      */
-    public function __invoke(CommandInterface $command): void
+    public function __invoke(Profile $profile)
     {
-        $this->profiles[] = new Profile($command);
+        $this->profiles[] = $profile;
     }
 }

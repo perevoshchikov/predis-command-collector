@@ -6,7 +6,6 @@ use Anper\Predis\CommandCollector\Collector;
 use Anper\Predis\CommandCollector\Profile;
 use PHPUnit\Framework\TestCase;
 use Predis\Client;
-use Predis\Command\CommandInterface;
 
 use function Anper\Predis\CommandCollector\get_collectors;
 
@@ -31,10 +30,10 @@ class CollectorTest extends TestCase
         $client = new Client();
 
         $collector = new Collector($client);
-        $command = $this->createMock(CommandInterface::class);
-        $collector->__invoke($command);
+        $profile = $this->createMock(Profile::class);
+        $collector->__invoke($profile);
 
-        $this->assertEquals([new Profile($command)], $collector->getProfiles());
+        $this->assertEquals([$profile], $collector->getProfiles());
     }
 
     public function testGetClient(): void

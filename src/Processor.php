@@ -30,6 +30,6 @@ class Processor implements ProcessorInterface
      */
     public function process(CommandInterface $command): void
     {
-        \call_user_func($this->collectors, $command);
+        \call_user_func($this->collectors, new Profile($command));
     }
 }
