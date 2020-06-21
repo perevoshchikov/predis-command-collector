@@ -6,7 +6,7 @@ use Predis\Command\CommandInterface;
 
 /**
  * Class Profile
- * @package Anper\PredisCollector
+ * @package Anper\Predis\CommandCollector
  */
 class Profile
 {

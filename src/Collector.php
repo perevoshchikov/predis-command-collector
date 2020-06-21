@@ -7,7 +7,7 @@ use Predis\Command\CommandInterface;
 
 /**
  * Class Collector
- * @package Anper\PredisCollector
+ * @package Anper\Predis\CommandCollector
  */
 class Collector
 {
