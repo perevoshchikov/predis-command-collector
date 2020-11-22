@@ -2,7 +2,6 @@
 
 namespace Anper\Predis\CommandCollector;
 
-use Anper\CallableAggregate\CallableAggregateInterface;
 use Predis\Command\CommandInterface;
 use Predis\Command\Processor\ProcessorInterface;
 
@@ -13,16 +12,16 @@ use Predis\Command\Processor\ProcessorInterface;
 class Processor implements ProcessorInterface
 {
     /**
-     * @var CallableAggregateInterface
+     * @var callable
      */
-    protected $collectors;
+    protected $collector;
 
     /**
-     * @param CallableAggregateInterface $collectors
+     * @param callable $collector
      */
-    public function __construct(CallableAggregateInterface $collectors)
+    public function __construct(callable $collector)
     {
-        $this->collectors = $collectors;
+        $this->collector = $collector;
     }
 
     /**
@@ -30,6 +29,6 @@ class Processor implements ProcessorInterface
      */
     public function process(CommandInterface $command): void
     {
-        \call_user_func($this->collectors, new Profile($command));
+        \call_user_func($this->collector, new Profile($command));
     }
 }
