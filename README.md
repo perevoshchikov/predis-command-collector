@@ -14,10 +14,11 @@ $ composer require anper/predis-command-collector
 
 ``` php
 use Anper\Predis\CommandCollector\Collector;
+use function Anper\Predis\CommandCollector\register_collector;
 
 $client = new \Predis\Client(...);
 
-$collector = new Collector($client);
+register_collector($client, $collector = new Collector($client));
 
 // redis queries...
 
