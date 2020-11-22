@@ -30,7 +30,7 @@ class RegisterTest extends TestCase
      */
     protected $collector2;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->collector1 = function ($a, $b) {
             //
