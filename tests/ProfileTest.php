@@ -17,7 +17,7 @@ class ProfileTest extends TestCase
         $command = new StringSet();
 
         $profile = new Profile($command);
-        $this->assertSame($command, $profile->getCommand());
+        self::assertSame($command, $profile->getCommand());
     }
 
     /**
@@ -51,6 +51,6 @@ class ProfileTest extends TestCase
         $command->setArguments(['foo', $given]);
 
         $profile = new Profile($command);
-        $this->assertSame('SET foo ' . $expected, $profile->getCommandAsString());
+        self::assertSame('SET foo ' . $expected, $profile->getCommandAsString());
     }
 }

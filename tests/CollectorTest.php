@@ -18,6 +18,6 @@ class CollectorTest extends TestCase
         $profile = $this->createMock(Profile::class);
         $collector->__invoke($profile);
 
-        $this->assertEquals([$profile], $collector->getProfiles());
+        self::assertEquals([$profile], $collector->getProfiles());
     }
 }

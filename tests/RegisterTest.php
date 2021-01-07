@@ -53,7 +53,7 @@ class RegisterTest extends TestCase
         $client = $this->getInvalidClient();
         $result = register_collector($client, $this->collector1, false);
 
-        $this->assertFalse($result);
+        self::assertFalse($result);
         $this->assertNotHasCollector($client, $this->collector1);
     }
 
@@ -71,10 +71,10 @@ class RegisterTest extends TestCase
         $result1 = register_collector($client, $this->collector1);
         $result2 = register_collector($client, $this->collector2);
 
-        $this->assertTrue($result1);
-        $this->assertTrue($result2);
-        $this->assertSame([$this->collector1, $this->collector2], get_collectors($client));
-        $this->assertTrue($this->hasProcessor($client));
+        self::assertTrue($result1);
+        self::assertTrue($result2);
+        self::assertSame([$this->collector1, $this->collector2], get_collectors($client));
+        self::assertTrue($this->hasProcessor($client));
     }
 
     public function testPrependRegister(): void
@@ -84,8 +84,8 @@ class RegisterTest extends TestCase
         register_collector($client, $this->collector1);
         register_collector($client, $this->collector2, true, true);
 
-        $this->assertSame([$this->collector2, $this->collector1], get_collectors($client));
-        $this->assertTrue($this->hasProcessor($client));
+        self::assertSame([$this->collector2, $this->collector1], get_collectors($client));
+        self::assertTrue($this->hasProcessor($client));
     }
 
     /**
@@ -115,7 +115,7 @@ class RegisterTest extends TestCase
      */
     protected function assertHasCollector(ClientInterface $client, $collector): void
     {
-        $this->assertTrue(
+        self::assertTrue(
             $this->hasCollector($client, $collector),
             'Collector does not register'
         );
@@ -127,7 +127,7 @@ class RegisterTest extends TestCase
      */
     protected function assertNotHasCollector(ClientInterface $client, $collector): void
     {
-        $this->assertFalse(
+        self::assertFalse(
             $this->hasCollector($client, $collector),
             'Collector already register'
         );
