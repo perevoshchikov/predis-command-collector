@@ -16,13 +16,13 @@
         }
     ],
     "require": {
-        "php": "^7.1",
-        "anper/callable-aggregate": "^0.2",
+        "php": "^7.1||^8.0",
+        "anper/callable-aggregate": "^0.3",
         "predis/predis": "^1.1"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.12.29",
-        "phpunit/phpunit": "^7.0|^8.0|^9.0",
+        "phpunit/phpunit": "^7.0||^8.0||^9.0",
         "squizlabs/php_codesniffer": "^3.0"
     },
     "autoload": {
